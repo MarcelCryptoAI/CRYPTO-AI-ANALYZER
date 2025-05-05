@@ -1,0 +1,184 @@
+1. Projectplanning en Requirements
+
+Login en gebruikersbeheer:
+
+Meerdere gebruikersaccounts.
+Starten met een wizard om verbinding te maken met TradingView API en ByBit API.
+Dashboard:
+
+Overzichtelijke statistieken per munt.
+Knop "Advies AI-gebaseerde strategie" met:
+Entry Point.
+Take Profit.
+Stop Loss.
+AI-analyse:
+
+Verwerking van historische data per munt.
+Betrouwbaarheidsscore per indicator berekenen.
+Gecombineerde voorspellingen van trends met slagingspercentage.
+Tradingfunctionaliteit:
+
+Starten van trades direct vanuit de applicatie.
+Overzicht van actieve en gesloten trades.
+Statistiekenpagina:
+
+Gedetailleerde analyses van handelsprestaties.
+Historische rapporten.
+
+2. Technische Stack
+Voor een webapplicatie zoals deze stel ik de volgende technologieën voor:
+
+Frontend:
+
+Framework: React.js (voor interactieve UI).
+Styling: TailwindCSS of Material-UI voor een modern design.
+Backend:
+
+Framework: Node.js met Express.js.
+AI-functionaliteit: Python met TensorFlow of PyTorch via een microservice).
+Database:
+
+PostgreSQL of MongoDB (voor gebruikers- en tradegegevens).
+API-integratie:
+
+TradingView API: Voor technische indicatoren.
+ByBit API: Voor muntgegevens en trade-uitvoering.
+Hosting:
+
+Frontend: Vercel of Netlify.
+Backend: Heroku, AWS,
+
+3. Features in Fases
+We kunnen het project in fases ontwikkelen:
+
+Fase 1: Basisfunctionaliteit
+Login en gebruikersbeheer.
+Dashboard met snelle statistieken.
+Wizard voor API-verbindingen (TradingView en ByBit).
+Basis AI-analyse met een score per indicator.
+Fase 2: Uitgebreide AI-functionaliteit
+Berekenen van gecombineerde trends en voorspellingen.
+Adviesstrategie genereren (Entry Point, Take Profit, Stop Loss).
+Fase 3: Tradingfunctionaliteit
+Trades starten en beheren vanuit de applicatie.
+Overzicht van actieve en gesloten trades.
+Fase 4: Statistiekenpagina
+Gedetailleerde prestatieanalyses.
+Historische rapportage.
+Fase 5: Verbetering en uitbreidingen
+Nieuwe indicatoren en strategieën toevoegen.
+Ondersteuning voor meerdere brokers.
+
+
+
+
+Hybride Logica voor berekenen slaginskans
+
+Opdracht voor ChatGPT met overzicht indicatoren en gekozen long/shortvoorwaarden met parameters
+
+De startpagina geeft een overzicht  met de munten en het advies/score op dat moment in een soort tabel MAAR middels tabbladen zijn er eigenlijk 5 startpagina/dashboards,  we doen dit namelijk per tijdframe
+
+Tab 1: 5 mintuen
+Tab 2:  15 minutern
+Tab 3:  60 min(1)
+Tab 4:  240 min (4h())
+Tab 5: 1 dan (1d)
+
+
+De pagina  toont tevens Een top 10 met  grootste kanshebbers en andere fancy statistieken.
+
+Achter elke regel in de tabel staat de knop details die opent de detaipagina van die munt waarop we alles uitleggen en laten zien hoe we tot advie komen.
+
+Als eerste wil ik dat elke detail pagina ook de  5 tabbladen heeft, alle 5 printen ze dezelfde statistiken maar elk tabblad heeft berekend op een ander tijframe. We gaan voor
+
+Tab 1: 5 mintuen
+Tab 2:  15 minutern
+Tab 3:  60 min(1)
+Tab 4:  240 min (4h())
+Tab 5: 1 dag (1d)
+
+Ik wil dat we gaan voor 40 indicatoren, elke indicator berekenen we hoe vaak die gelijk had als die zei long of short te gaan, dat percentage (winrate) bepaald hoe zwaar de indicator mee weegt in de uiteindelijke keuze om long of short te gaan. En al deze data samen geeft uiteindelijk  een totaal score bij het advies om long  of short te gaan.
+
+Ik wil dus dat AI deze gegevens continue bijwerkt en opnieuw uitrekent. We gaan voor een hybride model van berekenen.
+
+alleen indicatoren met winrate > 70% doen mee, en hun scores worden gewogen naar verhouding.
+
+Werkwijze:
+
+Filter op betrouwbaarheid (bijv. 70%+ winrate).
+
+Weging per indicator = winrate zelf (of bijv. genormaliseerd tussen 0 en 1).
+
+Groeperen: som van long-scores vs. short-scores.
+
+Advies = richting met hoogste score.
+
+Vertrouwen (%) = (som long- of short-scores) / (som van alle actieve scores).
+
+Voorbeeld:
+
+24 indicatoren boven 70% winrate.
+
+14 zeggen long, samen goed voor 650 punten.
+6 zeggen short, samen goed voor 240 punten.
+4 neutraal.
+
+Totaal actief = 650 + 240 = 890 punten.
+
+➡️ Advies: LONG
+
+➡️ Betrouwbaarheid: 650 / 890 = 73%
+
+📊 Conclusie: Dit is de meest realistische methode, omdat je én alleen betrouwbare indicatoren gebruikt, én hun impact proportioneel verwerkt. Je voorkomt extreme bias van onbetrouwbare signalen, en behoudt toch genoeg nuance.
+
+
+Voeg ook een confidence threshold toe: bijv. alleen advies geven als betrouwbaarheid > 60%.
+
+Ik wil op de detail pagina van een munt dat elke indicator visueel wordt weergegeven in een aparte chart met een uitleg er onder over de score en het advies op dar moment.
+
+Met een uiteindelijke conclusie. Stel de conclusie is Long advies dan wil ik dat AI op basiis v an alle gegevens ook en voorstel doet voor een long long entry point, de taka profit niveau('s) en een stop loss (waarbij tevens rkening wordt gehouden met de weerstand en support lijnen. 
+
+
+
+Hieronder de lijst  met alle 40 indicatoren en de gewenste instellingen/parameters.
+
+1. Relative Strength Index (14) - Buy als RSI < 30 (oversold), Sell als RSI > 70 (overbought)  
+2. Stochastic %K (14, 3, 3) - Buy bij %K kruist boven %D onder 20, Sell bij kruising onder 80  
+3. Commodity Channel Index (20) - Buy als CCI stijgt boven -100, Sell als CCI daalt onder +100  
+4. Average Directional Index (14) - Trendfilter; Buy als +DI > -DI én ADX > 20  
+5. Awesome Oscillator - Buy bij bullish crossover boven 0, Sell bij bearish crossover onder 0  
+6. Momentum (10) - Buy als momentum > 0 en stijgt, Sell als < 0 en daalt  
+7. MACD Level (12, 26) - Buy bij MACD-lijn kruist boven Signaallijn, Sell bij kruising onder  
+8. Stochastic RSI Fast (3, 3, 14, 14) - Buy bij stijging uit oversold (<20), Sell bij daling uit overbought (>80)  
+9. Williams Percent Range (14) - Buy bij waarden onder -80 die omhoog draaien, Sell bij boven -20 omlaag  
+10. Bull Bear Power - Buy als Bull Power positief en stijgend, Sell als negatief en dalend  
+11. Ultimate Oscillator (7, 14, 28) - Buy als UO > 50 en stijgt, Sell als UO < 50 en daalt  
+12. Exponential Moving Average (10) - Buy als prijs > EMA en EMA stijgt, Sell als prijs < EMA en daalt  
+13. Simple Moving Average (10) - Zelfde logica als EMA  
+14. Exponential Moving Average (20) - Zie EMA(10)  
+15. Simple Moving Average (20) - Zie SMA(10)  
+16. Exponential Moving Average (30) - Zie EMA(10)  
+17. Simple Moving Average (30) - Zie SMA(10)  
+18. Exponential Moving Average (50) - Zie EMA(10)  
+19. Simple Moving Average (50) - Zie SMA(10)  
+20. Exponential Moving Average (100) - Zie EMA(10)  
+21. Simple Moving Average (100) - Zie SMA(10)  
+22. Exponential Moving Average (200) - Zie EMA(10)  
+23. Simple Moving Average (200) - Zie SMA(10)  
+24. Ichimoku Base Line (Kijun-sen) - Buy als prijs boven lijn en stijgt, Sell als prijs eronder daalt  
+25. Volume Weighted Moving Average (20) - Buy als prijs boven VWMA + stijgende VWMA, Sell als omgekeerd  
+26. Hull Moving Average (9) - Buy als HMA stijgt en prijs erboven, Sell als daalt en prijs eronder  
+27. Supertrend - Buy bij bullish omslag (prijs > lijn), Sell bij bearish omslag (prijs < lijn)  
+28. Parabolic SAR - Buy als PSAR onder prijs komt, Sell als PSAR boven prijs verschijnt  
+29. Donchian Channels - Buy bij doorbraak boven hoogste high 20 bars, Sell bij doorbraak laagste low  
+30. Keltner Channels - Buy bij uitbraak boven upper band + stijgende trend, Sell bij doorbraak onder lower band  
+31. Aroon Indicator - Buy als Aroon Up > 70 en Aroon Down < 30, Sell omgekeerd  
+32. Ichimoku Cloud - Buy als prijs boven cloud én Tenkan > Kijun, Sell als prijs onder cloud  
+33. Bollinger Bands - Buy bij bounce op lower band met bevestiging, Sell bij rejection op upper band  
+34. Chaikin Money Flow (CMF) - Buy als CMF positief en stijgend, Sell als CMF negatief en dalend  
+35. Elder Ray Index - Buy als Bull Power > 0 en stijgt, Sell als Bear Power < 0 en daalt  
+36. Rate of Change (ROC) - Buy als ROC stijgt boven 0, Sell als ROC daalt onder 0  
+37. TRIX (Triple Exponential Average) - Buy bij TRIX kruist boven signaal, Sell bij kruising onder  
+38. On Balance Volume (OBV) - Buy als OBV stijgt met prijs, Sell als OBV daalt  
+39. Detrended Price Oscillator (DPO) - Buy bij DPO stijgend en boven 0, Sell als dalend en onder 0  
+40. Vortex Indicator - Buy als VI+ kruist boven VI-, Sell bij omgekeerde kruising  
