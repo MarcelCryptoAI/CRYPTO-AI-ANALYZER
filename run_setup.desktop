@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Run Crypto AI Setup
+Comment=Setup Crypto Analyse Pro Project
+Exec=bash -c "./setup_crypto_ai.sh"
+Type=Application
+Terminal=true

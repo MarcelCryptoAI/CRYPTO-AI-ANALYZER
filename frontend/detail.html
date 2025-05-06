@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Analyse Pro - Detailpagina</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://s3.tradingview.com/tv.js"></script>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+    <!-- Header -->
+    <div class="p-6 text-center bg-gray-800 shadow-lg">
+        <h1 class="text-4xl font-bold text-blue-400">Crypto Analyse Pro</h1>
+        <p class="text-gray-400 text-lg mt-2">Detailpagina voor BTCUSDT</p>
+    </div>
+
+    <!-- TradingView Widget -->
+    <div class="p-6 text-center bg-gray-800 shadow-md">
+        <h2 class="text-xl font-bold text-blue-400 mb-4">Live Chart</h2>
+        <div id="tradingview_chart" class="rounded-lg overflow-hidden mx-auto" style="height: 400px;"></div>
+    </div>
+
+    <!-- Indicatoren -->
+    <div class="p-6">
+        <h3 class="text-xl font-bold text-blue-400 mb-4">Indicatoren</h3>
+        <div id="indicators" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Dynamische indicator kaarten worden hier geladen -->
+        </div>
+    </div>
+
+    <!-- Conclusie en Trade Actie -->
+    <div id="conclusion" class="p-6 text-center bg-gray-800 shadow-md mt-4">
+        <h3 class="text-xl font-bold text-blue-400 mb-4">Conclusie</h3>
+        <p id="conclusion_text" class="text-gray-400 text-sm mb-4">
+            Advies en betrouwbaarheid worden berekend...
+        </p>
+        <p id="explanation_text" class="text-gray-400 text-sm mb-4">
+            Uitleg over hoe dit advies tot stand is gekomen...
+        </p>
+        <button id="trade_button" class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 hidden" onclick="openTrade()">Open AI Geoptimaliseerde Trade</button>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Placeholder data voor indicatoren
+        const indicators = [
+            { name: "RSI (14)", value: 29, winrate: 0.78, advice: "long" },
+            { name: "MACD (12, 26)", value: 1.2, winrate: 0.85, advice: "long" },
+            { name: "Stochastic %K (14, 3, 3)", value: 80, winrate: 0.65, advice: "short" },
+            { name: "ADX (14)", value: 25, winrate: 0.72, advice: "long" },
+        ];
+
+        // TradingView Widget Configuratie
+        new TradingView.widget({
+            container_id: "tradingview_chart",
+            width: "100%",
+            height: 400,
+            symbol: "BINANCE:BTCUSDT",
+            interval: "15",
+            timezone: "Etc/UTC",
+            theme: "dark",
+            style: "1",
+            locale: "en",
+            toolbar_bg: "#f1f3f6",
+            enable_publishing: false,
+            hide_side_toolbar: false,
+            allow_symbol_change: true,
+            studies: [],
+        });
+
+        // Functie om indicator kaarten te renderen
+        function renderIndicators() {
+            const container = document.getElementById("indicators");
+            container.innerHTML = ""; // Reset content
+
+            // Filter alleen indicatoren met winrate > 70%
+            const activeIndicators = indicators.filter(ind => ind.winrate >= 0.7);
+
+            activeIndicators.forEach(ind => {
+                const card = document.createElement("div");
+                card.className = "bg-gray-800 p-4 rounded-lg text-center shadow-lg cursor-pointer";
+                card.onclick = () => showIndicator(ind.name);
+
+                card.innerHTML = `
+                    <img src="./media/placeholder.png" alt="Placeholder" class="w-full h-32 object-cover rounded-md mb-2">
+                    <h4 class="text-lg font-bold text-blue-400">${ind.name}</h4>
+                    <p class="text-gray-400 text-sm mt-2">Huidige Waarde: ${ind.value}</p>
+                    <p class="text-gray-400 text-sm mt-2">IBS: ${(ind.winrate * 100).toFixed(1)}%</p>
+                    <p class="${ind.advice === "long" ? "text-green-400" : "text-red-400"} font-bold">
+                        Advies: ${ind.advice === "long" ? "Buy" : "Sell"}
+                    </p>
+                `;
+                container.appendChild(card);
+            });
+
+            calculateConclusion(activeIndicators);
+        }
+
+        // Functie om de conclusie te berekenen
+        function calculateConclusion(activeIndicators) {
+            let longScore = 0;
+            let shortScore = 0;
+
+            activeIndicators.forEach(ind => {
+                const weight = ind.winrate;
+                if (ind.advice === "long") longScore += weight;
+                if (ind.advice === "short") shortScore += weight;
+            });
+
+            const totalScore = longScore + shortScore;
+            const confidence = totalScore > 0 ? (Math.max(longScore, shortScore) / totalScore) * 100 : 0;
+            const advice = longScore > shortScore ? "LONG" : "SHORT";
+
+            // Update conclusie
+            const conclusionText = document.getElementById("conclusion_text");
+            conclusionText.innerHTML = `
+                Gebaseerd op de huidige analyse is het advies: <span class="font-bold text-green-400">${advice}</span>
+                met een betrouwbaarheidsscore van <span class="font-bold text-blue-400">${confidence.toFixed(1)}%</span>.
+            `;
+
+            // Update uitleg
+            const explanationText = document.getElementById("explanation_text");
+            explanationText.innerHTML = `
+                Dit advies is gebaseerd op <span class="font-bold">${activeIndicators.length} indicatoren</span> 
+                met een winrate boven 70%. Elke indicator draagt bij op basis van zijn betrouwbaarheid 
+                (${(activeIndicators.map(ind => ind.winrate * 100).join('% '))}%).
+                Indicatoren met een lagere winrate worden genegeerd om bias te voorkomen.
+            `;
+
+            // Toon trade knop als betrouwbaar > 70%
+            const tradeButton = document.getElementById("trade_button");
+            tradeButton.style.display = confidence > 70 ? "inline-block" : "none";
+        }
+
+        // Functie om indicator te tonen in TradingView Chart
+        function showIndicator(indicator) {
+            alert("Toon indicator: " + indicator + " in de chart (placeholder)");
+            // Voeg hier de logica toe om de TradingView-widget te updaten met de gekozen indicator
+        }
+
+        // Functie voor het openen van een trade
+        function openTrade() {
+            alert("Open AI Geoptimaliseerde Trade (placeholder)");
+            // Voeg hier de logica toe voor het starten van een trade via API
+        }
+
+        // Init
+        renderIndicators();
+    </script>
+</body>
+</html>

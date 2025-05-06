@@ -1,0 +1,109 @@
+#!/bin/bash
+
+echo "🚀 Crypto Analyse Pro Setup starten..."
+
+# Maak projectmappen aan
+echo "📂 Mappenstructuur aanmaken..."
+mkdir -p crypto_ai_project/{css,js,html}
+
+# Voeg Tailwind CSS toe
+echo "📄 Tailwind CSS-bestand toevoegen..."
+cat <<EOT > crypto_ai_project/css/tailwind.css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+EOT
+
+# Startpagina genereren
+echo "📄 Startpagina genereren..."
+cat <<EOT > crypto_ai_project/html/dashboard.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Analyse Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+    <div class="p-6 text-center">
+        <h1 class="text-4xl font-bold text-blue-400">Crypto Analyse Pro</h1>
+        <p class="text-gray-400 text-lg mt-2">Welkom op de startpagina</p>
+    </div>
+</body>
+</html>
+EOT
+
+# Detailpagina genereren met tabbladen en grid
+echo "📄 Detailpagina genereren..."
+cat <<EOT > crypto_ai_project/html/detail.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Analyse Pro - Detailpagina</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+    <div class="p-6 text-center">
+        <h1 class="text-4xl font-bold text-blue-400">Crypto Analyse Pro</h1>
+        <p class="text-gray-400 text-lg mt-2">Detailpagina voor BTCUSDT</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex justify-center space-x-4 mb-8">
+        <button onclick="showTab('tab-5m')" class="bg-blue-500 text-white px-4 py-2 rounded-lg">5m</button>
+        <button onclick="showTab('tab-15m')" class="bg-gray-700 text-gray-300 px-4 py-2 rounded-lg">15m</button>
+        <button onclick="showTab('tab-1h')" class="bg-gray-700 text-gray-300 px-4 py-2 rounded-lg">1h</button>
+        <button onclick="showTab('tab-4h')" class="bg-gray-700 text-gray-300 px-4 py-2 rounded-lg">4h</button>
+        <button onclick="showTab('tab-1d')" class="bg-gray-700 text-gray-300 px-4 py-2 rounded-lg">1d</button>
+    </div>
+
+    <!-- Tab Contents -->
+    <div id="tab-5m" class="tab-content active">
+        <h2 class="text-center text-2xl text-blue-400 mb-4">5 Minuten</h2>
+        <!-- Grid met indicatoren -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-8">
+            <div class="bg-gray-800 p-4 rounded-lg">
+                <h4 class="text-lg font-bold text-blue-400">Relative Strength Index (RSI)</h4>
+                <p class="text-gray-400 text-sm mt-2">IBS: 89%</p>
+                <p class="text-green-400 font-bold">Advies: Buy</p>
+            </div>
+            <!-- Voeg meer indicatoren toe -->
+        </div>
+    </div>
+    <div id="tab-15m" class="tab-content">
+        <h2 class="text-center text-2xl text-blue-400 mb-4">15 Minuten</h2>
+        <!-- Grid met indicatoren -->
+    </div>
+    <div id="tab-1h" class="tab-content">
+        <h2 class="text-center text-2xl text-blue-400 mb-4">1 Uur</h2>
+        <!-- Grid met indicatoren -->
+    </div>
+    <div id="tab-4h" class="tab-content">
+        <h2 class="text-center text-2xl text-blue-400 mb-4">4 Uur</h2>
+        <!-- Grid met indicatoren -->
+    </div>
+    <div id="tab-1d" class="tab-content">
+        <h2 class="text-center text-2xl text-blue-400 mb-4">1 Dag</h2>
+        <!-- Grid met indicatoren -->
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+        }
+    </script>
+</body>
+</html>
+EOT
+
+echo "✅ Setup voltooid! Bestanden staan nu in de map 'crypto_ai_project'."
