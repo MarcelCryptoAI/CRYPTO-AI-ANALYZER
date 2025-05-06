@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Analyse Pro - Detailpagina</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://s3.tradingview.com/tv.js"></script>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+    <!-- Header -->
+    <div class="p-6 text-center bg-gray-800 shadow-lg">
+        <h1 class="text-4xl font-bold text-blue-400">Crypto Analyse Pro</h1>
+        <p class="text-gray-400 text-lg mt-2">Detailpagina voor BYBIT:BTCUSDT.P</p>
+    </div>
+
+    <!-- Tabbladen voor Timeframes -->
+    <div class="p-4 bg-gray-800 text-center">
+        <div class="inline-flex space-x-2">
+            <button class="tab-btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" onclick="updateTimeframe('5')">5m</button>
+            <button class="tab-btn bg-gray-700 text-white px-4 py-2 rounded hover:bg-blue-600" onclick="updateTimeframe('15')">15m</button>
+            <button class="tab-btn bg-gray-700 text-white px-4 py-2 rounded hover:bg-blue-600" onclick="updateTimeframe('60')">1H</button>
+            <button class="tab-btn bg-gray-700 text-white px-4 py-2 rounded hover:bg-blue-600" onclick="updateTimeframe('240')">4H</button>
+            <button class="tab-btn bg-gray-700 text-white px-4 py-2 rounded hover:bg-blue-600" onclick="updateTimeframe('D')">1D</button>
+        </div>
+    </div>
+
+    <!-- TradingView Widget -->
+    <div class="p-6 text-center bg-gray-800 shadow-md">
+        <h2 class="text-xl font-bold text-blue-400 mb-4">Live Chart</h2>
+        <div id="tradingview_chart" class="rounded-lg overflow-hidden mx-auto" style="height: 400px;"></div>
+    </div>
+
+    <!-- Indicatoren -->
+    <div class="p-6">
+        <h3 class="text-xl font-bold text-blue-400 mb-4">Indicatoren</h3>
+        <div id="indicators" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- RSI kaartje wordt hier geladen -->
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        const API_URL = 'https://api.bybit.com/v2/public/kline/list'; // ByBit API voor candlestick data
+        const SYMBOL = 'BTCUSDT';
+        const INTERVAL = '60'; // 1 uur
+        const RSI_PERIOD = 14;
+
+        // Functie om historische data op te halen
+        async function fetchHistoricalData() {
+            try {
+                const response = await axios.get(`${API_URL}?symbol=${SYMBOL}&interval=${INTERVAL}&limit=200`);
+                return response.data.result.map(candle => parseFloat(candle.close)); // Alleen slotkoersen
+            } catch (error) {
+                console.error("Fout bij het ophalen van gegevens:", error);
+                return [];
+            }
+        }
+
+        // RSI Berekening
+        function calculateRSI(closes, period) {
+            let gains = 0, losses = 0;
+
+            // Eerste berekening voor gemiddelde winst en verlies
+            for (let i = 1; i <= period; i++) {
+                const change = closes[i] - closes[i - 1];
+                if (change > 0) gains += change;
+                else losses -= change;
+            }
+
+            gains /= period;
+            losses /= period;
+
+            // RSI voor de rest van de data
+            let rs = gains / losses;
+            let rsi = [100 - (100 / (1 + rs))];
+
+            for (let i = period + 1; i < closes.length; i++) {
+                const change = closes[i] - closes[i - 1];
+                gains = (gains * (period - 1) + (change > 0 ? change : 0)) / period;
+                losses = (losses * (period - 1) + (change < 0 ? -change : 0)) / period;
+                rs = gains / losses;
+                rsi.push(100 - (100 / (1 + rs)));
+            }
+
+            return rsi[rsi.length - 1]; // Geef de meest recente RSI terug
+        }
+
+        // RSI kaart genereren
+        async function renderRSICard() {
+            const closes = await fetchHistoricalData();
+            if (closes.length === 0) {
+                console.error("Geen data beschikbaar voor RSI-berekening.");
+                return;
+            }
+
+            const rsi = calculateRSI(closes, RSI_PERIOD);
+
+            const advice = rsi < 30 ? 'Buy' : rsi > 70 ? 'Sell' : 'Hold';
+            const adviceColor = rsi < 30 ? 'text-green-500' : rsi > 70 ? 'text-red-500' : 'text-yellow-500';
+
+            const container = document.getElementById('indicators');
+            container.innerHTML = ''; // Reset de container
+
+            const card = document.createElement('div');
+            card.className = 'bg-gray-800 p-4 rounded-lg shadow-lg text-center';
+
+            card.innerHTML = `
+                <div class="relative mb-4">
+                    <img src="file:///Volumes/Naamloos%202/App/crypto-analyse-pro/frontend/media/placeholder.png" alt="RSI (14)" class="rounded-lg w-full">
+                </div>
+                <h4 class="text-lg font-bold text-blue-400">RSI (14)</h4>
+                <p class="text-gray-400 text-sm mt-2">Huidige Waarde: ${rsi.toFixed(2)}</p>
+                <p class="${adviceColor} font-bold mt-2">Advies: ${advice}</p>
+            `;
+
+            container.appendChild(card);
+        }
+
+        // TradingView Widget Configuratie
+        let tradingViewWidget = null;
+
+        function initializeWidget(interval) {
+            if (tradingViewWidget) {
+                tradingViewWidget.remove();
+            }
+
+            tradingViewWidget = new TradingView.widget({
+                container_id: "tradingview_chart",
+                width: "100%",
+                height: 400,
+                symbol: "BYBIT:BTCUSDT.P", // Gebruik BYBIT BTCUSDT Perpetual symbool
+                interval: interval,
+                timezone: "Etc/UTC",
+                theme: "dark",
+                style: "1",
+                locale: "en",
+                toolbar_bg: "#f1f3f6",
+                enable_publishing: false,
+                hide_side_toolbar: false,
+                allow_symbol_change: true,
+                studies: []
+            });
+        }
+
+        // Functie om timeframe te updaten
+        function updateTimeframe(interval) {
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(button => button.classList.remove('bg-blue-500'));
+            buttons.forEach(button => button.classList.add('bg-gray-700'));
+            event.target.classList.add('bg-blue-500');
+            event.target.classList.remove('bg-gray-700');
+
+            initializeWidget(interval);
+        }
+
+        // Init
+        document.addEventListener("DOMContentLoaded", function () {
+            initializeWidget('60'); // Standaard interval is 1 uur
+            renderRSICard(); // Genereer RSI-kaart
+        });
+    </script>
+</body>
+</html>

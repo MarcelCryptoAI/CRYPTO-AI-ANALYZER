@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Analyse Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+
+    <!-- Header -->
+    <div class="p-6 text-center">
+        <h1 class="text-4xl font-bold text-blue-400">Crypto Analyse Pro</h1>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex justify-center space-x-4 mb-8">
+        <button class="tab-btn bg-blue-500 text-white px-4 py-2 rounded-lg">5m</button>
+        <button class="tab-btn bg-gray-700 text-gray-300 px-4 py-2 rounded-lg">15m</button>
+        <button class="tab-btn bg-gray-700 text-gray-300 px-4 py-2 rounded-lg">1h</button>
+        <button class="tab-btn bg-gray-700 text-gray-300 px-4 py-2 rounded-lg">4h</button>
+        <button class="tab-btn bg-gray-700 text-gray-300 px-4 py-2 rounded-lg">1d</button>
+    </div>
+
+    <!-- Statistics Section -->
+    <div class="grid grid-cols-4 gap-6 px-8">
+        <div class="bg-gray-800 rounded-lg p-6 text-center">
+            <p class="text-sm text-gray-400">Totale munten</p>
+            <h2 class="text-3xl font-bold text-blue-400">24</h2>
+        </div>
+        <div class="bg-gray-800 rounded-lg p-6 text-center">
+            <p class="text-sm text-gray-400">% Long</p>
+            <h2 class="text-3xl font-bold text-green-400">61.5%</h2>
+        </div>
+        <div class="bg-gray-800 rounded-lg p-6 text-center">
+            <p class="text-sm text-gray-400">% Short</p>
+            <h2 class="text-3xl font-bold text-red-400">38.5%</h2>
+        </div>
+        <div class="bg-gray-800 rounded-lg p-6 text-center">
+            <p class="text-sm text-gray-400">Gem. IBS</p>
+            <h2 class="text-3xl font-bold text-purple-400">72%</h2>
+        </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="mt-10 px-8">
+        <table class="table-auto w-full text-left">
+            <thead class="text-gray-400">
+                <tr>
+                    <th class="px-4 py-2">Coin</th>
+                    <th class="px-4 py-2">Advies</th>
+                    <th class="px-4 py-2">IBS</th>
+                    <th class="px-4 py-2">Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="bg-gray-800">
+                    <td class="px-4 py-2">BTCUSDT</td>
+                    <td class="px-4 py-2 text-green-400 font-bold">LONG</td>
+                    <td class="px-4 py-2">89%</td>
+                    <td class="px-4 py-2"><a href="#" class="text-blue-400 underline">Details</a></td>
+                </tr>
+                <tr class="bg-gray-800">
+                    <td class="px-4 py-2">ETHUSDT</td>
+                    <td class="px-4 py-2 text-green-400 font-bold">LONG</td>
+                    <td class="px-4 py-2">89%</td>
+                    <td class="px-4 py-2"><a href="#" class="text-blue-400 underline">Details</a></td>
+                </tr>
+                <!-- More rows as needed -->
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

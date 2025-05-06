@@ -12,6 +12,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ✅ Root-route voor basis-URL
+@app.get("/")
+def root():
+    return {"message": "Welkom bij de backend API!"}
+
+# ✅ Ping-route voor health check
 @app.get("/ping")
 def ping():
     return {"message": "pong"}
