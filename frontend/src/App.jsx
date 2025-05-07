@@ -1,12 +1,16 @@
-import React from 'react'
-import CoinDetailPage from './components/CoinDetailPage'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Dashboard from './pages/Dashboard';
+import CoinDetailPage from './components/CoinDetailPage';
 
 function App() {
   return (
-    <div className="bg-black min-h-screen text-white">
-      <CoinDetailPage />
-    </div>
-  )
+    <Router>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/coin/:symbol" element={<CoinDetailPage />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
