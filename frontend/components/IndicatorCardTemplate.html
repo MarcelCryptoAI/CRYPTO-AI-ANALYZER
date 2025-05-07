@@ -1,0 +1,11 @@
+<div class="card {{ ibs < 70 ? 'card-disabled' : '' }}">
+  <div class="relative mb-4 rounded-xl overflow-hidden shadow-inner shadow-black/30">
+    <img src="{{image}}" alt="{{name}}" class="w-full h-full object-cover" />
+    <div class="ibs-badge">IBS: {{ibs}}%</div>
+    <div class="value-overlay">{{value}}</div>
+  </div>
+  <h3 class="text-2xl font-extrabold text-white drop-shadow-sm tracking-wide uppercase">{{advice}}</h3>
+  <p class="text-slate-400 text-[13px] italic mb-4">{{name}}</p>
+  <p class="{{adviceColor}} text-md font-bold tracking-wider mb-3">Advies: {{advice}}</p>
+  <div class="card-explainer">{{explanation}}</div>
+</div>

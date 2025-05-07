@@ -1,9 +1,6 @@
 // tailwind.config.js
 module.exports = {
-  content: [
-    "./frontend/html/**/*.html",
-    // voeg hier al je template-locaties toe
-  ],
+  content: ["./frontend/html/**/*.html", "./frontend/components/**/*.html", "./frontend/**/*.js"],
   theme: {
     extend: {
       fontFamily: {

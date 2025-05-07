@@ -1,9 +1,5 @@
 module.exports = {
-  content: [
-    "./frontend/html/**/*.{html,js}",
-    "./frontend/components/**/*.{html,js}",
-    "./frontend/js/**/*.{html,js}"
-  ],
+  content: ["./frontend/html/**/*.html", "./frontend/components/**/*.html", "./frontend/**/*.js"],
   theme: {
     extend: {
       fontFamily: {
