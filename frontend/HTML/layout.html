@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="nl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Crypto Analyser Pro - Detailpagina</title>
+  <title>Crypto Analyse Pro - Detailpagina</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://s3.tradingview.com/tv.js"></script>
   <style>
@@ -42,31 +43,25 @@
     }
   </style>
 </head>
-<body class="bg-[#0f192a] text-white font-sans">
-  <div class="p-6 text-center bg-[#141e30]/60 backdrop-blur-md shadow-lg">
-    <h1 class="text-4xl md:text-5xl font-extrabold tracking-wide text-cyan-400">Crypto Analyse Pro</h1>
-    <p class="text-slate-300 text-lg mt-2 uppercase font-semibold tracking-wider">Detailpagina voor BTCUSDT</p>
+<body class="bg-gray-900 text-white font-sans">
+  <div class="p-6 text-center bg-gray-800 shadow-lg">
+    <h1 class="text-4xl font-bold text-blue-400">Crypto Analyse Pro</h1>
+    <p class="text-gray-400 text-lg mt-2">Detailpagina voor BTCUSDT</p>
   </div>
-
-  <div class="p-6 text-center bg-[#141e30]/60 backdrop-blur-md shadow-md">
+  <div class="p-6 text-center bg-gray-800 shadow-md">
     <h2 class="text-xl font-bold text-blue-400 mb-4">Live Chart</h2>
-    <div id="tradingview_chart" class="rounded-xl overflow-hidden mx-auto" style="height: 400px;"></div>
+    <div id="tradingview_chart" class="rounded-lg overflow-hidden mx-auto" style="height: 400px;"></div>
   </div>
-
   <div class="p-6">
-    <label for="sort" class="block text-sm font-medium text-slate-300 mb-2">Sorteer op:</label>
-    <select id="sort" onchange="renderIndicators()"
-            class="bg-[#141e30]/60 backdrop-blur-md text-white p-2 rounded-2xl w-full md:w-1/3 mb-6
-                   border border-cyan-400 hover:bg-cyan-400 hover:text-[#0e1726] transition duration-300">
+    <label for="sort" class="block text-sm font-medium text-blue-300 mb-2">Sorteer op:</label>
+    <select id="sort" onchange="renderIndicators()" class="bg-gray-800 text-white p-2 rounded w-full md:w-1/3 mb-6">
       <option value="ibs_desc">IBS score (aflopend)</option>
       <option value="ibs_asc">IBS score (oplopend)</option>
       <option value="advice_buy_first">Advies (Strong Buy → Strong Sell)</option>
       <option value="advice_sell_first">Advies (Strong Sell → Strong Buy)</option>
     </select>
-
-    <div id="indicators" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+    <div id="indicators" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
   </div>
-
   <script>
     new TradingView.widget({
       container_id: "tradingview_chart",
@@ -152,23 +147,23 @@
 
       sortedIndicators.forEach(ind => {
         const overlay = ind.winrate < 0.7 ? " opacity-overlay" : "";
-        const adviceColor = ind.advice.includes("Buy") ? "text-emerald-400" :
+        const adviceColor = ind.advice.includes("Buy") ? "text-green-400" :
                             ind.advice.includes("Sell") ? "text-red-400" : "text-yellow-300";
         const ibs = (ind.winrate * 100).toFixed(0);
 
         const card = document.createElement("div");
-        card.className = "relative bg-[#141e30]/60 backdrop-blur-md rounded-2xl p-4 shadow-lg shadow-cyan-500/10 text-center" + overlay;
+        card.className = "relative bg-gray-800 p-4 rounded-lg text-center shadow-lg" + overlay;
 
         card.innerHTML = `
           <div class="image-container">
             <img src="${ind.image}" alt="${ind.name}" />
             <div class="ibs-overlay">IBS score: ${ibs}</div>
           </div>
-          <h4 class="uppercase font-semibold tracking-wider text-lg md:text-xl mb-2">${ind.name}</h4>
-          <p class="text-slate-100 text-sm mb-1">${ind.value}</p>
-          <p class="text-slate-400 text-sm mb-2">IBS: ${ibs}%</p>
-          <p class="${adviceColor} font-extrabold mb-1">Advies: ${ind.advice}</p>
-          <p class="text-slate-300 text-xs">${ind.explanation}</p>
+          <h4 class="text-lg font-bold text-blue-400">${ind.name}</h4>
+          <p class="text-gray-400 text-sm mt-2">${ind.value}</p>
+          <p class="text-gray-400 text-sm mt-2">IBS: ${ibs}%</p>
+          <p class="${adviceColor} font-bold mt-1">Advies: ${ind.advice}</p>
+          <p class="text-gray-300 text-xs mt-2">${ind.explanation}</p>
         `;
         container.appendChild(card);
       });

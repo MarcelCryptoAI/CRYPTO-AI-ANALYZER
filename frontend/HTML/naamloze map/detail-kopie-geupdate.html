@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crypto Analyse Pro - Detailpagina</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://s3.tradingview.com/tv.js"></script>
+  <style>
+    .opacity-overlay::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-color: white;
+      opacity: 0.5;
+      border-radius: 0.5rem;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+
+  <!-- Header -->
+  <div class="p-6 text-center bg-gray-800 shadow-lg">
+    <h1 class="text-4xl font-bold text-blue-400">Crypto Analyse Pro</h1>
+    <p class="text-gray-400 text-lg mt-2">Detailpagina voor BTCUSDT</p>
+  </div>
+
+  <!-- TradingView Chart -->
+  <div class="p-6 text-center bg-gray-800 shadow-md">
+    <h2 class="text-xl font-bold text-blue-400 mb-4">Live Chart</h2>
+    <div id="tradingview_chart" class="rounded-lg overflow-hidden mx-auto" style="height: 400px;"></div>
+  </div>
+
+  <!-- Indicatoren -->
+  <div class="p-6">
+    <h3 class="text-xl font-bold text-blue-400 mb-4">Indicatoren</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+      <!-- MACD -->
+      <div class="relative bg-gray-800 p-4 rounded-lg text-center shadow-lg opacity-overlay">
+        <img src="https://via.placeholder.com/100" alt="MACD" class="w-full h-32 object-cover rounded-md mb-2" />
+        <h4 class="text-lg font-bold text-blue-400">MACD (12, 26, close)</h4>
+        <p class="text-gray-400 text-sm mt-2">Lijn: 0.0025, Signaallijn: 0.0018, Histogram: 0.0007</p>
+        <p class="text-gray-400 text-sm mt-2">IBS: 65%</p>
+        <p class="text-yellow-300 font-bold">Advies: Neutraal</p>
+      </div>
+
+      <!-- RSI -->
+      <div class="relative bg-gray-800 p-4 rounded-lg text-center shadow-lg">
+        <img src="https://via.placeholder.com/100" alt="RSI" class="w-full h-32 object-cover rounded-md mb-2" />
+        <h4 class="text-lg font-bold text-blue-400">RSI (14)</h4>
+        <p class="text-gray-400 text-sm mt-2">Huidige waarde: 29</p>
+        <p class="text-gray-400 text-sm mt-2">IBS: 83%</p>
+        <p class="text-green-400 font-bold">Advies: Strong Buy</p>
+      </div>
+
+      <!-- Supertrend -->
+      <div class="relative bg-gray-800 p-4 rounded-lg text-center shadow-lg">
+        <img src="https://via.placeholder.com/100" alt="Supertrend" class="w-full h-32 object-cover rounded-md mb-2" />
+        <h4 class="text-lg font-bold text-blue-400">Supertrend (10, 3)</h4>
+        <p class="text-gray-400 text-sm mt-2">Trend: Uptrend, Waarde: 61780.50</p>
+        <p class="text-gray-400 text-sm mt-2">IBS: 75%</p>
+        <p class="text-green-300 font-bold">Advies: Buy</p>
+      </div>
+
+      <!-- SMA -->
+      <div class="relative bg-gray-800 p-4 rounded-lg text-center shadow-lg opacity-overlay">
+        <img src="https://via.placeholder.com/100" alt="SMA" class="w-full h-32 object-cover rounded-md mb-2" />
+        <h4 class="text-lg font-bold text-blue-400">SMA (14)</h4>
+        <p class="text-gray-400 text-sm mt-2">Waarde: 61425.10</p>
+        <p class="text-gray-400 text-sm mt-2">IBS: 61%</p>
+        <p class="text-red-300 font-bold">Advies: Sell</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TradingView init -->
+  <script>
+    new TradingView.widget({
+      container_id: "tradingview_chart",
+      width: "100%",
+      height: 400,
+      symbol: "BYBIT:BTCUSDT.P",
+      interval: "60",
+      timezone: "Etc/UTC",
+      theme: "dark",
+      style: "1",
+      locale: "nl",
+      toolbar_bg: "#f1f3f6",
+      enable_publishing: false,
+      hide_side_toolbar: false,
+      allow_symbol_change: true,
+      studies: [],
+    });
+  </script>
+</body>
+</html>
