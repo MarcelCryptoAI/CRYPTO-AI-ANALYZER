@@ -44,45 +44,81 @@
 </head>
 <body class="bg-[#0f192a] text-white font-sans">
   <div class="p-6 text-center bg-[#141e30]/60 backdrop-blur-md shadow-lg">
-    <h1 class="text-4xl md:text-5xl font-extrabold tracking-wide text-cyan-400">Crypto Analyse Pro</h1>
+    <h1 class="text-4xl md:text-5xl font-extrabold tracking-wide text-cyan-400">Ai Crypto Analyser</h1>
     <p class="text-slate-300 text-lg mt-2 uppercase font-semibold tracking-wider">Detailpagina voor BTCUSDT</p>
+  </div>
+
+  <div class="flex justify-center gap-4 p-4 border-b border-cyan-700 text-sm font-semibold">
+    <button class="tf-tab px-3 py-1 rounded-t-lg border-b-2 text-cyan-400 border-cyan-400 active-tab" data-tf="1h">1H</button>
+    <button class="tf-tab px-3 py-1 rounded-t-lg border-b-2 border-transparent hover:text-cyan-400" data-tf="5m">5M</button>
+    <button class="tf-tab px-3 py-1 rounded-t-lg border-b-2 border-transparent hover:text-cyan-400" data-tf="15m">15M</button>
+    <button class="tf-tab px-3 py-1 rounded-t-lg border-b-2 border-transparent hover:text-cyan-400" data-tf="4h">4H</button>
+    <button class="tf-tab px-3 py-1 rounded-t-lg border-b-2 border-transparent hover:text-cyan-400" data-tf="1d">1D</button>
   </div>
 
   <div class="p-6 text-center bg-[#141e30]/60 backdrop-blur-md shadow-md">
     <h2 class="text-xl font-bold text-blue-400 mb-4">Live Chart</h2>
-    <div id="tradingview_chart" class="rounded-xl overflow-hidden mx-auto" style="height: 400px;"></div>
+    <div id="tradingview_chart_wrapper" class="rounded-xl overflow-hidden mx-auto" style="height: 400px;">
+      <div id="tradingview_chart" style="height: 400px;"></div>
+    </div>
   </div>
 
   <div class="p-6">
     <label for="sort" class="block text-sm font-medium text-slate-300 mb-2">Sorteer op:</label>
-    <select id="sort" onchange="renderIndicators()"
-            class="bg-[#141e30]/60 backdrop-blur-md text-white p-2 rounded-2xl w-full md:w-1/3 mb-6
-                   border border-cyan-400 hover:bg-cyan-400 hover:text-[#0e1726] transition duration-300">
+    <select id="sort" onchange="renderIndicators()" class="bg-[#141e30]/60 backdrop-blur-md text-white p-2 rounded-2xl w-full md:w-1/3 mb-6 border border-cyan-400 hover:bg-cyan-400 hover:text-[#0e1726] transition duration-300">
       <option value="ibs_desc">IBS score (aflopend)</option>
       <option value="ibs_asc">IBS score (oplopend)</option>
       <option value="advice_buy_first">Advies (Strong Buy → Strong Sell)</option>
       <option value="advice_sell_first">Advies (Strong Sell → Strong Buy)</option>
     </select>
-
     <div id="indicators" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
   </div>
 
   <script>
-    // 📦 Data per tijdframe
     const indicatorDataByTF = {
       "1h": [
-        { name: "RSI (14)", value: "Waarde: 29", winrate: 0.83, advice: "Strong Buy", explanation: "RSI onder de 30 wordt vaak gezien als oversold. Dit kan wijzen op een opkomende koopmogelijkheid.", image: "./media/RSI.png" },
-        { name: "MACD (12,26)", value: "Lijn: 0.0025, Signaallijn: 0.0018, Histogram: 0.0007", winrate: 0.85, advice: "Strong Buy", explanation: "MACD geeft een Buy-signaal als de MACD-lijn boven de signaallijn kruist. Sell bij kruising onder.", image: "./media/MACD.png" },
-        { name: "Supertrend (10,3)", value: "Uptrend, Waarde: 61780.50", winrate: 0.75, advice: "Buy", explanation: "Supertrend staat op 'Uptrend', wat aangeeft dat het momentum positief is. Buy wordt aanbevolen.", image: "./media/SUPERTREND.png" },
-        { name: "SMA (14)", value: "61425.10", winrate: 0.61, advice: "Sell", explanation: "De prijs zit onder de SMA-lijn, wat duidt op een neerwaartse trend. Sell wordt aanbevolen.", image: "./media/SMA.png" }
+        { name: "RSI (14)", value: "Waarde: 29", winrate: 0.83, advice: "Strong Buy", explanation: "RSI onder de 30 = koopmogelijkheid", image: "./media/RSI.png" },
+        { name: "MACD (12,26)", value: "0.0025", winrate: 0.85, advice: "Strong Buy", explanation: "MACD lijn kruist boven signaal", image: "./media/MACD.png" },
+        { name: "Supertrend (10,3)", value: "Uptrend", winrate: 0.75, advice: "Buy", explanation: "Uptrend betekent momentum positief", image: "./media/SUPERTREND.png" },
+        { name: "SMA (14)", value: "61425.10", winrate: 0.61, advice: "Sell", explanation: "Prijs onder SMA → neerwaartse trend", image: "./media/SMA.png" },
       ]
     };
 
     let currentTimeframe = "1h";
 
+    function updateChart(tf) {
+      const container = document.getElementById("tradingview_chart");
+      container.innerHTML = "";
+      const intervalMap = {
+        "5m": "5",
+        "15m": "15",
+        "1h": "60",
+        "4h": "240",
+        "1d": "D"
+      };
+      const interval = intervalMap[tf] || "60";
+
+      new TradingView.widget({
+        container_id: "tradingview_chart",
+        width: "100%",
+        height: 400,
+        symbol: "BYBIT:BTCUSDT.P",
+        interval: interval,
+        timezone: "Etc/UTC",
+        theme: "dark",
+        style: "1",
+        locale: "nl",
+        toolbar_bg: "#f1f3f6",
+        enable_publishing: false,
+        hide_side_toolbar: false,
+        allow_symbol_change: true,
+        studies: []
+      });
+    }
+
     function renderIndicators() {
       const sortType = document.getElementById("sort").value;
-      let indicators = [...(indicatorDataByTF[currentTimeframe] || [])];
+      const indicators = [...(indicatorDataByTF[currentTimeframe] || [])];
       const adviceOrder = { "Strong Buy": 5, "Buy": 4, "Neutraal": 3, "Sell": 2, "Strong Sell": 1 };
 
       switch (sortType) {
@@ -97,13 +133,11 @@
 
       indicators.forEach(ind => {
         const overlay = ind.winrate < 0.7 ? " opacity-overlay" : "";
-        const adviceColor = ind.advice.includes("Buy") ? "text-emerald-400" :
-                            ind.advice.includes("Sell") ? "text-red-400" : "text-yellow-300";
+        const adviceColor = ind.advice.includes("Buy") ? "text-emerald-400" : ind.advice.includes("Sell") ? "text-red-400" : "text-yellow-300";
         const ibs = (ind.winrate * 100).toFixed(0);
 
         const card = document.createElement("div");
-        card.className = "relative bg-[#141e30]/60 backdrop-blur-md rounded-2xl p-4 shadow-lg shadow-cyan-500/10 text-center" + overlay;
-
+        card.className = "relative bg-[#141e30]/60 backdrop-blur-md rounded-2xl p-4 shadow-xl shadow-cyan-500/20 text-center" + overlay;
         card.innerHTML = `
           <div class='image-container'>
             <img src='${ind.image}' alt='${ind.name}' />
@@ -115,26 +149,6 @@
           <p class='text-slate-300 text-xs text-justify leading-snug'>${ind.explanation}</p>
         `;
         container.appendChild(card);
-      });
-    }
-
-    function updateChart(tf) {
-      document.getElementById("tradingview_chart").innerHTML = "";
-      new TradingView.widget({
-        container_id: "tradingview_chart",
-        width: "100%",
-        height: 400,
-        symbol: "BYBIT:BTCUSDT.P",
-        interval: tf === "5m" ? 5 : tf === "15m" ? 15 : tf === "1h" ? 60 : tf === "4h" ? 240 : "D",
-        timezone: "Etc/UTC",
-        theme: "dark",
-        style: "1",
-        locale: "nl",
-        toolbar_bg: "#f1f3f6",
-        enable_publishing: false,
-        hide_side_toolbar: false,
-        allow_symbol_change: true,
-        studies: [],
       });
     }
 
