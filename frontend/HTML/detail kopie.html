@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bitcoin Analyse - 1Uur</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #0f172a;
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .advice-strong-buy { color: #00ff00; font-weight: bold; }
+    .advice-buy { color: #32cd32; font-weight: bold; }
+    .advice-neutral { color: #cccccc; font-weight: bold; }
+    .advice-sell { color: #ff6347; font-weight: bold; }
+    .advice-strong-sell { color: #ff0000; font-weight: bold; }
+  </style>
+</head>
+<body class="p-4">
+  <h1 class="text-2xl font-bold mb-4 text-center">Bitcoin (BTC/USDT) - 1Uur Analyse</h1>
+
+  <!-- TradingView Chart -->
+  <div class="w-full h-96 mb-8">
+    <iframe class="w-full h-full" src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_btc_chart&symbol=BYBIT:BTCUSDT&interval=60&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Europe%2FAmsterdam&withdateranges=1&hideideas=1&studies_overrides={}&overrides={}" frameborder="0" allowtransparency="true" scrolling="no"></iframe>
+  </div>
+
+  <!-- Indicator Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <!-- MACD -->
+    <div class="bg-gray-800 rounded-lg p-4 shadow text-center">
+      <h2 class="text-lg font-semibold mb-2">MACD</h2>
+      <img src="https://via.placeholder.com/100" class="mx-auto mb-2" alt="MACD">
+      <p>Lijn: <span id="macd-line">-</span></p>
+      <p>Signaallijn: <span id="macd-signal">-</span></p>
+      <p>Histogram: <span id="macd-histogram">-</span></p>
+      <p class="mt-3 advice-strong-buy">Strong Buy</p>
+    </div>
+
+    <!-- RSI -->
+    <div class="bg-gray-800 rounded-lg p-4 shadow text-center">
+      <h2 class="text-lg font-semibold mb-2">RSI</h2>
+      <img src="https://via.placeholder.com/100" class="mx-auto mb-2" alt="RSI">
+      <p>Waarde: <span id="rsi-value">-</span></p>
+      <p class="mt-3 advice-buy">Buy</p>
+    </div>
+
+    <!-- Supertrend -->
+    <div class="bg-gray-800 rounded-lg p-4 shadow text-center">
+      <h2 class="text-lg font-semibold mb-2">Supertrend</h2>
+      <img src="https://via.placeholder.com/100" class="mx-auto mb-2" alt="Supertrend">
+      <p>Trend: <span id="supertrend-trend">-</span></p>
+      <p>Supertrend Waarde: <span id="supertrend-value">-</span></p>
+      <p class="mt-3 advice-neutral">Neutraal</p>
+    </div>
+
+    <!-- SMA -->
+    <div class="bg-gray-800 rounded-lg p-4 shadow text-center">
+      <h2 class="text-lg font-semibold mb-2">SMA (14)</h2>
+      <img src="https://via.placeholder.com/100" class="mx-auto mb-2" alt="SMA">
+      <p>Waarde: <span id="sma-value">-</span></p>
+      <p class="mt-3 advice-sell">Sell</p>
+    </div>
+  </div>
+
+  <!-- JS voor mockdata -->
+  <script>
+    document.getElementById('macd-line').textContent = "0.0025";
+    document.getElementById('macd-signal').textContent = "0.0018";
+    document.getElementById('macd-histogram').textContent = "0.0007";
+    document.getElementById('rsi-value').textContent = "61.3";
+    document.getElementById('supertrend-trend').textContent = "Uptrend";
+    document.getElementById('supertrend-value').textContent = "61780.50";
+    document.getElementById('sma-value').textContent = "61425.10";
+  </script>
+</body>
+</html>
