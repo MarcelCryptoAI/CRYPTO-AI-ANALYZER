@@ -1,3 +1,10 @@
+#!/bin/bash
+
+echo "📦 Plaatsen van aangepaste IndicatorCard in frontend/components..."
+
+mkdir -p frontend/components
+
+cat <<EOT > frontend/components/IndicatorCard.html
 <div class="relative bg-[#141e30]/60 backdrop-blur-md rounded-2xl p-6 shadow-2xl shadow-cyan-500/30 text-center transform transition-transform duration-300 hover:scale-[1.03] hover:shadow-cyan-300/40 ring-1 ring-cyan-500/20">
   <!-- Afbeelding met overlay -->
   <div class="image-container relative mb-4 rounded-xl overflow-hidden shadow-inner shadow-black/30">
@@ -24,3 +31,6 @@
     {{explanation}}
   </div>
 </div>
+EOT
+
+echo "✅ IndicatorCard.html bijgewerkt in frontend/components/"
